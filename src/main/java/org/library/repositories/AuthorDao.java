@@ -1,6 +1,6 @@
 package org.library.repositories;
 
-import org.hibernate.Criteria;
+//import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -30,7 +30,8 @@ public class AuthorDao extends AnyDao<Author>{
 
     public List<Author> getAll() {
         Session session = sessionFactory.openSession();
-        List<Author> authorsFromDB = session.createCriteria(Author.class).list();
+//        List<Author> authorsFromDB = session.createCriteria(Author.class).list();
+        List<Author> authorsFromDB = session.createQuery("from Author", Author.class).getResultList();
         session.close();
         return authorsFromDB;
     }

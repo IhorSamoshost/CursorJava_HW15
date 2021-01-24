@@ -1,10 +1,11 @@
 package org.library.repositories;
 
-import org.hibernate.Criteria;
+//import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.criterion.Restrictions;
+//import org.hibernate.criterion.Restrictions;
+import org.library.entities.Author;
 import org.library.entities.User;
 import org.springframework.stereotype.Repository;
 
@@ -32,7 +33,8 @@ public class UserDao extends AnyDao<User> {
 
     public List<User> getAll() {
         Session session = sessionFactory.openSession();
-        List<User> usersFromDB = session.createCriteria(User.class).list();
+//        List<User> usersFromDB = session.createCriteria(User.class).list();
+        List<User> usersFromDB = session.createQuery("from User", User.class).getResultList();
         session.close();
         return usersFromDB;
     }

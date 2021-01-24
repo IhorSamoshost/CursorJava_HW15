@@ -48,7 +48,6 @@ public class AppConfig {
 
     @Bean()
     public DataSource getDataSource() {
-//        System.out.println("**"+driverClassName+"&&"+url+"***"+username+"%%%"+password);
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(driverClassName);
         dataSource.setUrl(url);
@@ -73,7 +72,6 @@ public class AppConfig {
 
     @Bean
     public Properties getHibernateProperties() {
-//        System.out.println("**" + hibernateDialect + "&&" + hibernateShowSql + "***" + hibernateHbm2ddlAuto);
         Properties properties = new Properties();
         properties.put("hibernate.dialect", hibernateDialect);
         properties.put("hibernate.show_sql", hibernateShowSql);

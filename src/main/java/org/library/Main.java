@@ -12,7 +12,8 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 public class Main {
     public static void main(String[] args) {
 //        ApplicationContext applicationContext = new AnnotationConfigApplicationContext(SpringConfig.class);
-        ApplicationContext applicationContext = new AnnotationConfigApplicationContext(AppConfig.class);
+//        ApplicationContext applicationContext = new AnnotationConfigApplicationContext(AppConfig.class);
+        ApplicationContext applicationContext = new AnnotationConfigApplicationContext(MyConfig.class);
         AuthorDao authorDao = applicationContext.getBean(AuthorDao.class);
         UserDao userDao = applicationContext.getBean(UserDao.class);
         BookDao bookDao = applicationContext.getBean(BookDao.class);
