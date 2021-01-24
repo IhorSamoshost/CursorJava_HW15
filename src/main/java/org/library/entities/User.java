@@ -3,24 +3,21 @@ package org.library.entities;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
-@Table(name = "users")
+@Table(name = "readers")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
+    @Column(name = "idreader")
     private int userId;
 
-    @Column(name = "user_name")
+    @Column(name = "reader_name")
     private String userName;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "user_book",
-            joinColumns = @JoinColumn(name = "id_user", referencedColumnName = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "id_book", referencedColumnName = "book_id")
-    )
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Book> userBooks;
 
     public User() {
@@ -53,10 +50,25 @@ public class User {
 
     public void addBook(Book book) {
         userBooks.add(book);
+        book.setUser(this);
     }
 
     public void removeBook(Book book) {
         userBooks.remove(book);
+        book.removeUser();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return getUserId() == user.getUserId() && Objects.equals(getUserName(), user.getUserName());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getUserId(), getUserName());
     }
 
     @Override
@@ -64,7 +76,7 @@ public class User {
         return "User{" +
                 "id = " + userId +
                 ", name = " + userName +
-//                ", books = " + userBooks +
+                ", books = " + userBooks +
                 '}';
     }
 }

@@ -4,9 +4,7 @@ package org.library.repositories;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.library.entities.Author;
 import org.library.entities.Book;
-import org.library.entities.User;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.TypedQuery;
@@ -19,15 +17,12 @@ import java.util.List;
 @Repository
 public class BookDao extends AnyDao<Book>{
 
-//    public BookDao() {
-//    }
-
     public BookDao(SessionFactory sessionFactory) {
         super(sessionFactory);
     }
 
     @Override
-    public Book read(Integer entityId) {
+    public Book getById(Integer entityId) {
         Session session = sessionFactory.openSession();
         Book entity = session.get(Book.class, entityId);
         session.close();

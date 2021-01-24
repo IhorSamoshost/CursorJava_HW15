@@ -1,44 +1,33 @@
 package org.library.entities;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
-@Table(name = "books")
+@Table(name = "book_table")
 public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "book_id")
+    @Column(name = "idbook")
     private int bookId;
 
-    @Column(name = "title")
+    @Column(name = "book_title")
     private String bookTitle;
 
-    @Column(name = "total_count")
-    private int bookTotalCount;
-
-    @Column(name = "remain_count")
-    private int remainCount;
-
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "authorBooks")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "writtenBook")
     private Set<Author> authors;
 
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "userBooks")
-    private List<User> users;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "idreader")
+    private User user;
 
     public Book() {
     }
 
-    public Book(String bookTitle, int bookTotalCount) {
+    public Book(String bookTitle) {
         this.bookTitle = bookTitle;
-        this.bookTotalCount = bookTotalCount;
-        this.remainCount = this.bookTotalCount;
         this.authors = new HashSet<>();
-        this.users = new ArrayList<>();
     }
 
     public int getBookId() {
@@ -61,67 +50,47 @@ public class Book {
         this.authors = authors;
     }
 
-    public int getBookTotalCount() {
-        return bookTotalCount;
+    public User getUser() {
+        return user;
     }
 
-    public void setBookTotalCount(int bookTotalCount) {
-        this.bookTotalCount = bookTotalCount;
-    }
-
-    public int getRemainCount() {
-        return remainCount;
-    }
-
-    public void setRemainCount(int remainCount) {
-        this.remainCount = remainCount;
-    }
-
-    public List<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<User> users) {
-        this.users = users;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public void addAuthor(Author author) {
         authors.add(author);
-        author.addWritenBook(this);
+        author.setWrittenBook(this);
     }
 
     public void removeAuthor(Author author) {
         authors.remove(author);
-        author.removeWritenBook(this);
+        author.removeWritenBook();
     }
 
-    public void addUser(User user) {
-        if (remainCount > 0) {
-            users.add(user);
-            remainCount--;
-            user.addBook(this);
-        } else {
-            System.out.println("There are no available books in library!");
-        }
+    public void removeUser() {
+       user = null;
     }
 
-    public void removeUser(User user) {
-        if (users.contains(user)) {
-            users.remove(user);
-            remainCount++;
-            user.removeBook(this);
-        } else System.out.println("There is not such user for this book!");
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Book)) return false;
+        Book book = (Book) o;
+        return getBookId() == book.getBookId() && Objects.equals(getBookTitle(), book.getBookTitle());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getBookId(), getBookTitle());
     }
 
     @Override
     public String toString() {
         return "Book{" +
-                "bookId=" + bookId +
-                ", bookTitle='" + bookTitle + '\'' +
-                ", bookTotalCount=" + bookTotalCount +
-                ", remainCount=" + remainCount +
+                "id=" + bookId +
+                ", title='" + bookTitle + '\'' +
                 ", authors=" + authors +
-                ", users=" + users +
                 '}';
     }
 }

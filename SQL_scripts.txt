@@ -1,69 +1,42 @@
 CREATE SCHEMA `my_library` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ;
 
-CREATE TABLE `my_library`.`authors` (
-  `author_id` INT NOT NULL AUTO_INCREMENT,
-  `author_name` VARCHAR(45) NULL,
-  PRIMARY KEY (`author_id`),
-  UNIQUE INDEX `author_id_UNIQUE` (`author_id` ASC) VISIBLE)
+CREATE TABLE `my_library`.`readers` (
+  `idreader` INT NOT NULL AUTO_INCREMENT,
+  `reader_name` VARCHAR(45) NULL,
+  PRIMARY KEY (`idreader`),
+  UNIQUE INDEX `idreader_UNIQUE` (`idreader` ASC) VISIBLE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_unicode_ci;
 
-CREATE TABLE `my_library`.`users` (
-  `user_id` INT NOT NULL AUTO_INCREMENT,
-  `user_name` VARCHAR(45) NULL,
-  PRIMARY KEY (`user_id`),
-  UNIQUE INDEX `user_id_UNIQUE` (`user_id` ASC) VISIBLE)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8
-COLLATE = utf8_unicode_ci;
-
-CREATE TABLE `my_library`.`books` (
-  `book_id` INT NOT NULL AUTO_INCREMENT,
-  `title` VARCHAR(45) NULL,
-  `total_count` INT NULL,
-  `remain_count` INT NULL,
-  PRIMARY KEY (`book_id`),
-  UNIQUE INDEX `book_id_UNIQUE` (`book_id` ASC) VISIBLE)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8
-COLLATE = utf8_unicode_ci;
-
-CREATE TABLE `my_library`.`user_book` (
-  `id_user` INT NULL,
-  `id_book` INT NULL,
-  INDEX `user_idx` (`id_user` ASC) VISIBLE,
-  INDEX `book_idx` (`id_book` ASC) VISIBLE,
-  CONSTRAINT `user`
-    FOREIGN KEY (`id_user`)
-    REFERENCES `my_library`.`users` (`user_id`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-  CONSTRAINT `book`
-    FOREIGN KEY (`id_book`)
-    REFERENCES `my_library`.`books` (`book_id`)
-    ON DELETE CASCADE
+CREATE TABLE `my_library`.`book_table` (
+  `idbook` INT NOT NULL AUTO_INCREMENT,
+  `book_title` VARCHAR(45) NULL,
+  `idreader` INT NULL,
+  PRIMARY KEY (`idbook`),
+  UNIQUE INDEX `idbook_UNIQUE` (`idbook` ASC) VISIBLE,
+  INDEX `reader_idx` (`idreader` ASC) VISIBLE,
+  CONSTRAINT `reader`
+    FOREIGN KEY (`idreader`)
+    REFERENCES `my_library`.`readers` (`idreader`)
+    ON DELETE SET NULL
     ON UPDATE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_unicode_ci;
 
-CREATE TABLE `my_library`.`author_book` (
-  `id_author` INT NULL,
-  `id_book` INT NULL,
-  INDEX `author_idx` (`id_author` ASC) VISIBLE,
-  INDEX `book_idx` (`id_book` ASC) VISIBLE,
-  CONSTRAINT `author`
-    FOREIGN KEY (`id_author`)
-    REFERENCES `my_library`.`authors` (`author_id`)
-    ON DELETE NO ACTION
-    ON UPDATE CASCADE,
-  CONSTRAINT `bookOfAuthor`
-    FOREIGN KEY (`id_book`)
-    REFERENCES `my_library`.`books` (`book_id`)
-    ON DELETE NO ACTION
+CREATE TABLE `my_library`.`author_table` (
+  `idauthor` INT NOT NULL AUTO_INCREMENT,
+  `name_author` VARCHAR(45) NULL,
+  `id_written_book` INT NULL,
+  PRIMARY KEY (`idauthor`),
+  UNIQUE INDEX `idauthor_UNIQUE` (`idauthor` ASC) VISIBLE,
+  INDEX `written_book_idx` (`id_written_book` ASC) VISIBLE,
+  CONSTRAINT `written_book`
+    FOREIGN KEY (`id_written_book`)
+    REFERENCES `my_library`.`book_table` (`idbook`)
+    ON DELETE SET NULL
     ON UPDATE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_unicode_ci;
-

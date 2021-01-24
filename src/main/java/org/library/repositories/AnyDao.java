@@ -3,7 +3,6 @@ package org.library.repositories;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.library.entities.Book;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -16,18 +15,14 @@ import java.util.List;
 
 @Repository
 public abstract class AnyDao<T> {
-    T typedObject;
     protected SessionFactory sessionFactory;
 
-//    public AnyDao() {
-//    }
-
-    @Autowired
+//    @Autowired
     public AnyDao(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
-    @Transactional
+//    @Transactional
     public Integer create(T newEntity) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
@@ -37,10 +32,10 @@ public abstract class AnyDao<T> {
         return newEntityId;
     }
 
-    @Transactional
-    public abstract T read(Integer entityId);
+//    @Transactional
+    public abstract T getById(Integer entityId);
 
-    @Transactional
+//    @Transactional
     public void update(T entity) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
@@ -49,7 +44,7 @@ public abstract class AnyDao<T> {
         session.close();
     }
 
-    @Transactional
+//    @Transactional
     public void delete(T entity) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();

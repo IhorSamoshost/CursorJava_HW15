@@ -1,34 +1,29 @@
 package org.library.entities;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Objects;
 
 @Entity
-@Table(name = "authors")
+@Table(name = "author_table")
 public class Author {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "author_id")
+    @Column(name = "idauthor")
     private int authorId;
 
-    @Column(name = "author_name")
+    @Column(name = "name_author")
     private String authorName;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "author_book",
-            joinColumns = @JoinColumn(name = "id_author", referencedColumnName = "author_id"),
-            inverseJoinColumns = @JoinColumn(name = "id_book", referencedColumnName = "book_id")
-    )
-    private Set<Book> authorBooks;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_written_book")
+    private Book writtenBook;
 
     public Author() {
     }
 
     public Author(String authorName) {
         this.authorName = authorName;
-        this.authorBooks = new HashSet<>();
     }
 
     public int getAuthorId() {
@@ -43,27 +38,36 @@ public class Author {
         this.authorName = authorName;
     }
 
-    public Set<Book> getAuthorBooks() {
-        return authorBooks;
+    public Book getWrittenBook() {
+        return writtenBook;
     }
 
-    public void setAuthorBooks(Set<Book> authorBooks) {
-        this.authorBooks = authorBooks;
+    public void setWrittenBook(Book book) {
+        this.writtenBook = book;
     }
 
-    public void addWritenBook (Book book) {
-        authorBooks.add(book);
+    public void removeWritenBook () {
+        writtenBook = null;
     }
 
-    public void removeWritenBook (Book book) {
-        authorBooks.remove(book);
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Author)) return false;
+        Author author = (Author) o;
+        return getAuthorId() == author.getAuthorId() && Objects.equals(getAuthorName(), author.getAuthorName());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getAuthorId(), getAuthorName());
     }
 
     @Override
     public String toString() {
         return "Author{" +
-                "id = " + authorId +
-                ", name = " + authorName +
+                "id=" + authorId +
+                ", name='" + authorName + '\'' +
                 '}';
     }
 }
