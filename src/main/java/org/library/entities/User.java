@@ -16,7 +16,7 @@ public class User {
     @Column(name = "user_name")
     private String userName;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "user_book",
             joinColumns = @JoinColumn(name = "id_user", referencedColumnName = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "id_book", referencedColumnName = "book_id")
@@ -55,12 +55,16 @@ public class User {
         userBooks.add(book);
     }
 
+    public void removeBook(Book book) {
+        userBooks.remove(book);
+    }
+
     @Override
     public String toString() {
         return "User{" +
                 "id = " + userId +
                 ", name = " + userName +
-                ", books = " + userBooks +
+//                ", books = " + userBooks +
                 '}';
     }
 }

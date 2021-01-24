@@ -6,16 +6,18 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 //import org.hibernate.criterion.Restrictions;
 import org.library.entities.Author;
+import org.library.entities.Book;
 import org.library.entities.User;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
 public class UserDao extends AnyDao<User> {
 
-    public UserDao() {
-    }
+//    public UserDao() {
+//    }
 
     public UserDao(SessionFactory sessionFactory) {
         super(sessionFactory);
@@ -31,6 +33,7 @@ public class UserDao extends AnyDao<User> {
         return entity;
     }
 
+    @Transactional
     public List<User> getAll() {
         Session session = sessionFactory.openSession();
 //        List<User> usersFromDB = session.createCriteria(User.class).list();

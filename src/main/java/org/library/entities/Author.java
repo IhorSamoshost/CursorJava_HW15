@@ -16,7 +16,7 @@ public class Author {
     @Column(name = "author_name")
     private String authorName;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "author_book",
             joinColumns = @JoinColumn(name = "id_author", referencedColumnName = "author_id"),
             inverseJoinColumns = @JoinColumn(name = "id_book", referencedColumnName = "book_id")
@@ -53,6 +53,10 @@ public class Author {
 
     public void addWritenBook (Book book) {
         authorBooks.add(book);
+    }
+
+    public void removeWritenBook (Book book) {
+        authorBooks.remove(book);
     }
 
     @Override

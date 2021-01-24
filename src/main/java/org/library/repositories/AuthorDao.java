@@ -8,13 +8,14 @@ import org.library.entities.Author;
 import org.library.entities.User;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
 public class AuthorDao extends AnyDao<Author>{
 
-    public AuthorDao() {
-    }
+//    public AuthorDao() {
+//    }
 
     public AuthorDao(SessionFactory sessionFactory) {
         super(sessionFactory);
@@ -28,6 +29,7 @@ public class AuthorDao extends AnyDao<Author>{
         return entity;
     }
 
+    @Transactional
     public List<Author> getAll() {
         Session session = sessionFactory.openSession();
 //        List<Author> authorsFromDB = session.createCriteria(Author.class).list();

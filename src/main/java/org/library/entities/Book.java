@@ -1,7 +1,9 @@
 package org.library.entities;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -22,11 +24,11 @@ public class Book {
     @Column(name = "remain_count")
     private int remainCount;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "authorBooks")
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "authorBooks")
     private Set<Author> authors;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "userBooks")
-    private Set<User> users;
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "userBooks")
+    private List<User> users;
 
     public Book() {
     }
@@ -36,7 +38,7 @@ public class Book {
         this.bookTotalCount = bookTotalCount;
         this.remainCount = this.bookTotalCount;
         this.authors = new HashSet<>();
-        this.users = new HashSet<>();
+        this.users = new ArrayList<>();
     }
 
     public int getBookId() {
@@ -75,30 +77,39 @@ public class Book {
         this.remainCount = remainCount;
     }
 
-    public Set<User> getUsers() {
+    public List<User> getUsers() {
         return users;
     }
 
-    public void setUsers(Set<User> users) {
+    public void setUsers(List<User> users) {
         this.users = users;
     }
 
     public void addAuthor(Author author) {
         authors.add(author);
+        author.addWritenBook(this);
+    }
+
+    public void removeAuthor(Author author) {
+        authors.remove(author);
+        author.removeWritenBook(this);
     }
 
     public void addUser(User user) {
         if (remainCount > 0) {
             users.add(user);
             remainCount--;
+            user.addBook(this);
+        } else {
+            System.out.println("There are no available books in library!");
         }
-        System.out.println("There are no available books in library!");
     }
 
     public void removeUser(User user) {
         if (users.contains(user)) {
             users.remove(user);
             remainCount++;
+            user.removeBook(this);
         } else System.out.println("There is not such user for this book!");
     }
 
