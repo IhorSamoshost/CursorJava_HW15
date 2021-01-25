@@ -1,15 +1,10 @@
 package org.library.entities;
 
-import org.hibernate.annotations.Proxy;
-
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 @Table(name = "readers")
-//@Proxy(lazy = false)
 public class User {
 
     @Id
@@ -20,8 +15,9 @@ public class User {
     @Column(name = "reader_name")
     private String userName;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
-    private List<Book> userBooks;
+    @JoinColumn(name = "idreader")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<Book> userBooks;
 
     public User() {
     }
@@ -42,37 +38,23 @@ public class User {
         this.userName = userName;
     }
 
-    public List<Book> getUserBooks() {
+    public Set<Book> getUserBooks() {
         return userBooks;
     }
 
-    public void setUserBooks(List<Book> userBooks) {
+    public void setUserBooks(Set<Book> userBooks) {
         this.userBooks = userBooks;
     }
 
     public void addBook(Book book) {
-        if(userBooks==null) {
-        userBooks = new ArrayList<>();}
+        if (userBooks == null) {
+            userBooks = new HashSet<>();
+        }
         userBooks.add(book);
-        book.setUser(this);
     }
 
     public void removeBook(Book book) {
         userBooks.remove(book);
-        book.removeUser();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof User)) return false;
-        User user = (User) o;
-        return getUserId() == user.getUserId() && Objects.equals(getUserName(), user.getUserName());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getUserId(), getUserName());
     }
 
     @Override

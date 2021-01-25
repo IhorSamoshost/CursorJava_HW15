@@ -1,26 +1,23 @@
 package org.library.entities;
 
-import org.hibernate.annotations.Proxy;
-
 import javax.persistence.*;
-import java.util.Objects;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-@Table(name = "author_table")
-//@Proxy(lazy = false)
+@Table(name = "authors")
 public class Author {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idauthor")
+    @Column(name = "author_id")
     private int authorId;
 
-    @Column(name = "name_author")
+    @Column(name = "author_name")
     private String authorName;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_written_book")
-    private Book writtenBook;
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "authors")
+    private Set<Book> writtenBooks;
 
     public Author() {
     }
@@ -41,36 +38,34 @@ public class Author {
         this.authorName = authorName;
     }
 
-    public Book getWrittenBook() {
-        return writtenBook;
+    public Set<Book> getWrittenBooks() {
+        return writtenBooks;
     }
 
-    public void setWrittenBook(Book book) {
-        this.writtenBook = book;
+    public void setWrittenBooks(Set<Book> books) {
+        this.writtenBooks = books;
     }
 
-    public void removeWritenBook () {
-        writtenBook = null;
+    public void removeWritenBooks() {
+        writtenBooks = null;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Author)) return false;
-        Author author = (Author) o;
-        return getAuthorId() == author.getAuthorId() && Objects.equals(getAuthorName(), author.getAuthorName());
+    public void addWrittenBook(Book book) {
+        if (writtenBooks == null) {
+            writtenBooks = new HashSet<>();
+        }
+        writtenBooks.add(book);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(getAuthorId(), getAuthorName());
+    public void removeWrittenBook(Book book) {
+        writtenBooks.remove(book);
     }
 
     @Override
     public String toString() {
         return "Author{" +
-                "id=" + authorId +
-                ", name='" + authorName + '\'' +
+                "id = " + authorId +
+                ", name = " + authorName +
                 '}';
     }
 }

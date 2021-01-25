@@ -1,13 +1,10 @@
 package org.library.entities;
 
-import org.hibernate.annotations.Proxy;
-
 import javax.persistence.*;
 import java.util.*;
 
 @Entity
 @Table(name = "book_table")
-//@Proxy(lazy = false)
 public class Book {
 
     @Id
@@ -18,18 +15,23 @@ public class Book {
     @Column(name = "book_title")
     private String bookTitle;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "writtenBook")
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "book_author",
+            joinColumns = @JoinColumn(name = "book_id", referencedColumnName = "idbook"),
+            inverseJoinColumns = @JoinColumn(name = "id_author", referencedColumnName = "author_id")
+    )
     private Set<Author> authors = new HashSet<>();
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "idreader")
-    private User user;
 
     public Book() {
     }
 
     public Book(String bookTitle) {
         this.bookTitle = bookTitle;
+    }
+
+    public Book(String bookTitle, Set<Author> authors) {
+        this.bookTitle = bookTitle;
+        this.authors = authors;
     }
 
     public int getBookId() {
@@ -52,39 +54,14 @@ public class Book {
         this.authors = authors;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public void addAuthor(Author author) {
         authors.add(author);
-        author.setWrittenBook(this);
+        author.addWrittenBook(this);
     }
 
     public void removeAuthor(Author author) {
         authors.remove(author);
-        author.removeWritenBook();
-    }
-
-    public void removeUser() {
-       user = null;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Book)) return false;
-        Book book = (Book) o;
-        return getBookId() == book.getBookId() && Objects.equals(getBookTitle(), book.getBookTitle());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getBookId(), getBookTitle());
+        author.removeWrittenBook(this);
     }
 
     @Override
@@ -92,7 +69,6 @@ public class Book {
         return "Book{" +
                 "id=" + bookId +
                 ", title='" + bookTitle + '\'' +
-                ", authors=" + authors +
                 '}';
     }
 }

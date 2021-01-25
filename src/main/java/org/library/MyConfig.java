@@ -17,26 +17,10 @@ import java.util.Properties;
 @PropertySource(value = {"classpath:application.properties"})
 public class MyConfig {
 
-//    @Bean
-//    public Properties getHibernateProperties() {
-//        Properties properties = new Properties();
-//        properties.put("hibernate.connection.driver_class", "${hibernate.connection.driver_class}");
-////        properties.put("spring.jpa.database-platform", "${spring.jpa.database-platform}");
-//        properties.put("hibernate.dialect", "${hibernate.dialect}");
-//        properties.put("hibernate.connection.url", "${hibernate.connection.url}");
-//        properties.put("hibernate.connection.username", "${hibernate.connection.username}");
-//        properties.put("hibernate.connection.password", "${hibernate.connection.password}");
-//        properties.put("hibernate.show_sql", "${hibernate.show_sql}");
-//        properties.put("hibernate.hbm2ddl.auto", "${hibernate.hbm2ddl.auto}");
-//        properties.put("hibernate.entitymanager.packages.to.scan", "${hibernate.entitymanager.packages.to.scan}");
-//        return properties;
-//    }
-
     @Bean
     public Properties getHibernateProperties(Environment environment) {
         Properties properties = new Properties();
         properties.put("hibernate.connection.driver_class", environment.getProperty("hibernate.connection.driver_class"));
-//        properties.put("spring.jpa.database-platform", "${spring.jpa.database-platform}");
         properties.put("hibernate.dialect", environment.getProperty("hibernate.dialect"));
         properties.put("hibernate.connection.url", environment.getProperty("hibernate.connection.url"));
         properties.put("hibernate.connection.username", environment.getProperty("hibernate.connection.username"));
@@ -46,12 +30,6 @@ public class MyConfig {
         properties.put("hibernate.entitymanager.packages.to.scan", environment.getProperty("hibernate.entitymanager.packages.to.scan"));
         return properties;
     }
-
-//    @Bean
-//    public SessionFactory sessionFactory() {
-//        return new org.hibernate.cfg.Configuration()
-//                .addProperties(getHibernateProperties()).buildSessionFactory();
-//    }
 
     @Bean
     public SessionFactory sessionFactory(Properties getHibernateProperties) {
