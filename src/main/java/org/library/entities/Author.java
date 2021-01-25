@@ -1,10 +1,13 @@
 package org.library.entities;
 
+import org.hibernate.annotations.Proxy;
+
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
 @Table(name = "author_table")
+//@Proxy(lazy = false)
 public class Author {
 
     @Id
@@ -15,7 +18,7 @@ public class Author {
     @Column(name = "name_author")
     private String authorName;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "id_written_book")
     private Book writtenBook;
 

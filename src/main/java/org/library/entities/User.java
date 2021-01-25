@@ -1,5 +1,7 @@
 package org.library.entities;
 
+import org.hibernate.annotations.Proxy;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +9,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "readers")
+//@Proxy(lazy = false)
 public class User {
 
     @Id
@@ -17,7 +20,7 @@ public class User {
     @Column(name = "reader_name")
     private String userName;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
     private List<Book> userBooks;
 
     public User() {
@@ -25,7 +28,6 @@ public class User {
 
     public User(String userName) {
         this.userName = userName;
-        this.userBooks = new ArrayList<>();
     }
 
     public int getUserId() {
@@ -49,6 +51,8 @@ public class User {
     }
 
     public void addBook(Book book) {
+        if(userBooks==null) {
+        userBooks = new ArrayList<>();}
         userBooks.add(book);
         book.setUser(this);
     }

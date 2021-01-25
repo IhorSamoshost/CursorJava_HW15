@@ -22,7 +22,7 @@ public abstract class AnyDao<T> {
         this.sessionFactory = sessionFactory;
     }
 
-//    @Transactional
+    @Transactional
     public Integer create(T newEntity) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
@@ -32,10 +32,10 @@ public abstract class AnyDao<T> {
         return newEntityId;
     }
 
-//    @Transactional
+    @Transactional
     public abstract T getById(Integer entityId);
 
-//    @Transactional
+    @Transactional
     public void update(T entity) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
@@ -44,7 +44,7 @@ public abstract class AnyDao<T> {
         session.close();
     }
 
-//    @Transactional
+    @Transactional
     public void delete(T entity) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();

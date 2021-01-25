@@ -1,10 +1,13 @@
 package org.library.entities;
 
+import org.hibernate.annotations.Proxy;
+
 import javax.persistence.*;
 import java.util.*;
 
 @Entity
 @Table(name = "book_table")
+//@Proxy(lazy = false)
 public class Book {
 
     @Id
@@ -15,8 +18,8 @@ public class Book {
     @Column(name = "book_title")
     private String bookTitle;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "writtenBook")
-    private Set<Author> authors;
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "writtenBook")
+    private Set<Author> authors = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idreader")
@@ -27,7 +30,6 @@ public class Book {
 
     public Book(String bookTitle) {
         this.bookTitle = bookTitle;
-        this.authors = new HashSet<>();
     }
 
     public int getBookId() {
